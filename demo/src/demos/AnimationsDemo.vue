@@ -91,6 +91,7 @@ function fireAll() {
   cursor: pointer;
   transition: all 150ms;
   font-family: inherit;
+  color: var(--app-text);
 }
 .pos-btn:hover { border-color: var(--app-accent); background: var(--app-active-bg); }
 .pos-btn__icon  { font-size: 1.375rem; }

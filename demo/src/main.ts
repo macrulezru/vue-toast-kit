@@ -11,6 +11,7 @@ import HeadlessDemo from './demos/HeadlessDemo.vue'
 import MultiInstanceDemo from './demos/MultiInstanceDemo.vue'
 import DesignSystemDemo from './demos/DesignSystemDemo.vue'
 import AnimationsDemo from './demos/AnimationsDemo.vue'
+import StackDemo from './demos/StackDemo.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -24,6 +25,7 @@ const router = createRouter({
     { path: '/multi', component: MultiInstanceDemo },
     { path: '/design', component: DesignSystemDemo },
     { path: '/animations', component: AnimationsDemo },
+    { path: '/stack', component: StackDemo },
   ],
 })
 

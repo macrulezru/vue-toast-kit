@@ -1,0 +1,74 @@
+:root {
+  /* === Цвета фона и текста === */
+  --vtk-color-bg: #ffffff;
+  --vtk-color-text: #1a1a1a;
+  --vtk-color-text-muted: #6b7280;
+  --vtk-color-border: rgba(0, 0, 0, 0.08);
+
+  /* === Цвета типов === */
+  --vtk-color-success: #16a34a;
+  --vtk-color-success-bg: #f0fdf4;
+  --vtk-color-success-border: #bbf7d0;
+
+  --vtk-color-error: #dc2626;
+  --vtk-color-error-bg: #fef2f2;
+  --vtk-color-error-border: #fecaca;
+
+  --vtk-color-warning: #d97706;
+  --vtk-color-warning-bg: #fffbeb;
+  --vtk-color-warning-border: #fde68a;
+
+  --vtk-color-info: #2563eb;
+  --vtk-color-info-bg: #eff6ff;
+  --vtk-color-info-border: #bfdbfe;
+
+  --vtk-color-loading: #7c3aed;
+  --vtk-color-loading-bg: #f5f3ff;
+  --vtk-color-loading-border: #ddd6fe;
+
+  /* === Прогресс-бар === */
+  --vtk-progress-color: currentColor;
+  --vtk-progress-opacity: 0.25;
+
+  /* === Типографика === */
+  --vtk-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --vtk-font-size: 0.875rem;
+  --vtk-font-size-sm: 0.75rem;
+  --vtk-font-weight: 500;
+  --vtk-font-weight-normal: 400;
+  --vtk-line-height: 1.5;
+
+  /* === Форма === */
+  --vtk-border-radius: 10px;
+  --vtk-border-width: 1px;
+  --vtk-shadow: 0 4px 16px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+
+  /* === Размеры === */
+  --vtk-padding-x: 1rem;
+  --vtk-padding-y: 0.75rem;
+  --vtk-icon-size: 1.25rem;
+  --vtk-progress-height: 3px;
+  --vtk-max-width: 400px;
+  --vtk-min-width: 280px;
+  --vtk-gap: 0.5rem;
+
+  /* === Кнопки === */
+  --vtk-btn-color: inherit;
+  --vtk-btn-bg: transparent;
+  --vtk-btn-hover-bg: rgba(0, 0, 0, 0.06);
+  --vtk-btn-radius: 6px;
+  --vtk-btn-font-size: 0.8125rem;
+  --vtk-btn-font-weight: 600;
+  --vtk-btn-padding: 0.25rem 0.625rem;
+
+  /* === Анимации === */
+  --vtk-transition-duration: 300ms;
+  --vtk-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* === Z-index === */
+  --vtk-z-index: 9999;
+
+  /* === Контейнер === */
+  --vtk-container-offset-x: 1rem;
+  --vtk-container-offset-y: 1rem;
+}

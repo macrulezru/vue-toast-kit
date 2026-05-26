@@ -1,0 +1,30 @@
+.vtk-theme-light,
+[data-vtk-theme="light"] {
+  --vtk-color-bg: #ffffff;
+  --vtk-color-text: #1a1a1a;
+  --vtk-color-text-muted: #6b7280;
+  --vtk-color-border: rgba(0, 0, 0, 0.08);
+  --vtk-shadow: 0 4px 16px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
+
+  --vtk-color-success: #16a34a;
+  --vtk-color-success-bg: #f0fdf4;
+  --vtk-color-success-border: #bbf7d0;
+
+  --vtk-color-error: #dc2626;
+  --vtk-color-error-bg: #fef2f2;
+  --vtk-color-error-border: #fecaca;
+
+  --vtk-color-warning: #d97706;
+  --vtk-color-warning-bg: #fffbeb;
+  --vtk-color-warning-border: #fde68a;
+
+  --vtk-color-info: #2563eb;
+  --vtk-color-info-bg: #eff6ff;
+  --vtk-color-info-border: #bfdbfe;
+
+  --vtk-color-loading: #7c3aed;
+  --vtk-color-loading-bg: #f5f3ff;
+  --vtk-color-loading-border: #ddd6fe;
+
+  --vtk-btn-hover-bg: rgba(0, 0, 0, 0.06);
+}

@@ -194,6 +194,58 @@
   }
 }
 
+/* === Normal mode: list is layout-transparent === */
+.vtk-container__list {
+  display: contents;
+}
+
+/* =====================================================
+   Stack mode — fully self-contained, does not reuse
+   the flex layout of the normal container.
+   ===================================================== */
+
+/* 1. Switch the container from flex to block so we control
+      all positioning ourselves. Position/size classes
+      (bottom-right, top-left, etc.) already set fixed
+      coordinates, so the container stays in the right corner. */
+.vtk-container--stack {
+  display: block;
+}
+
+/* 2. The list becomes a zero-height positioned block.
+      Toast wraps are absolute children; overflow:visible
+      lets them paint outside the 0-height bounding box. */
+.vtk-container--stack .vtk-container__list {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 0;
+  overflow: visible;
+}
+
+/* 3. Each toast wrap: absolutely positioned, full width,
+      anchored to the list edge (bottom or top).
+      Depth/transform/opacity applied via inline style.
+      Transition here so vtk-stack-leave-active can override it. */
+.vtk-container--stack .vtk-stack-wrap {
+  position: absolute;
+  width: 100%;
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+
+/* 4. Expanded (hover) state: restore the original flex layout
+      so toasts spread out naturally at their full positions. */
+.vtk-container--stack-expanded {
+  display: flex;
+}
+.vtk-container--stack-expanded .vtk-container__list {
+  display: contents;
+}
+.vtk-container--stack-expanded .vtk-stack-wrap {
+  position: static;
+  transition: none;
+}
+
 /* === Reduced motion === */
 @media (prefers-reduced-motion: reduce) {
   .vtk-progress__bar { transition: none; }

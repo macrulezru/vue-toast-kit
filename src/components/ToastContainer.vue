@@ -48,51 +48,63 @@ const isHovered = ref(false)
 // Все видимые тосты
 const allToasts = computed(() => queue.active.filter(t => !queue.isHidden(t.id)))
 
-// Тосты по позиции: тост без position попадает в props.position; critical — первыми
+// Тосты по позиции: тост без position попадает в props.position.
+// В stack mode порядок вставки сохраняется — приоритетная сортировка
+// ломает последовательность стопки, поэтому отключена.
 function toastsForPosition(pos: ToastPosition): ToastItem[] {
-  return allToasts.value
+  const filtered = allToasts.value
     .filter(t => (t.options.position ?? props.position) === pos)
-    .sort((a, b) => PRIORITY_ORDER[b.options.priority] - PRIORITY_ORDER[a.options.priority])
+  if (props.stackMode) return filtered
+  return filtered.sort((a, b) => PRIORITY_ORDER[b.options.priority] - PRIORITY_ORDER[a.options.priority])
 }
 
-// Stack mode: depth = расстояние от "переднего" тоста
-function stackDepth(index: number, total: number, pos: ToastPosition): number {
-  return pos.startsWith('bottom') ? (total - 1 - index) : index
+// Stack mode: index=0 is always the front toast.
+// Bottom positions use column-reverse, so index=0 renders at the viewport corner.
+// Top positions use column, so index=0 also renders at the viewport corner.
+function stackDepth(index: number): number {
+  return index
 }
 
-// Inline-стиль обёртки тоста в stack mode
-function stackWrapStyle(index: number, total: number, pos: ToastPosition): Record<string, string> {
+// Inline style for each toast wrapper in stack mode.
+// ALL depths use position:absolute so depth changes are purely transform+opacity —
+// no layout jump from toggling between absolute and relative positioning.
+// The CSS transition on .vtk-stack-wrap handles the smooth animation.
+function stackWrapStyle(index: number, _total: number, pos: ToastPosition): Record<string, string> {
   if (!props.stackMode || isHovered.value) return {}
-  const depth = stackDepth(index, total, pos)
-  if (depth === 0) return { 'z-index': '10' }
-  if (depth > 2) return { display: 'none' }
+  const depth = stackDepth(index)
 
   const isBottom = pos.startsWith('bottom')
-  const scale = Math.max(0.88, 1 - depth * 0.06)
-  const offset = depth * 8
-  const opacity = Math.max(0.5, 1 - depth * 0.2)
   const edgeProp = isBottom ? 'bottom' : 'top'
+  const offset = depth * 8
+  const scale = Math.max(0.7, 1 - depth * 0.06)
+
+  // depth=0: front toast, no transform/opacity overrides — CSS handles it
+  if (depth === 0) {
+    return { [edgeProp]: '0', 'z-index': '10' }
+  }
+
+  // depth > 2: keep element at its extrapolated stack position with opacity:0.
+  // This way, when it becomes depth=2 the CSS transition animates from the
+  // correct "behind the stack" coordinates, not from some unrelated position.
+  const visible = depth <= 2
+  const opacity = visible ? Math.max(0.5, 1 - depth * 0.2) : 0
 
   return {
-    position: 'absolute',
-    width: '100%',
     [edgeProp]: '0',
-    transform: `translateY(${isBottom ? offset : -offset}px) scale(${scale})`,
+    transform: `translateY(${isBottom ? -offset : offset}px) scale(${scale})`,
     opacity: String(opacity),
     'pointer-events': 'none',
-    'z-index': String(10 - depth),
-    transition: 'transform 300ms ease, opacity 300ms ease',
+    'z-index': visible ? String(10 - depth) : '0',
   }
 }
 
-// CSS-классы контейнера для конкретной позиции
+// CSS classes for the container at a given position
 function containerClass(pos: ToastPosition) {
-  const toasts = toastsForPosition(pos)
   return [
     'vtk-container',
     `vtk-container--${pos}`,
     props.theme && typeof props.theme === 'string' ? `vtk-theme-${props.theme}` : '',
-    props.stackMode && toasts.length > 1 ? 'vtk-container--stack' : '',
+    props.stackMode ? 'vtk-container--stack' : '',
     props.stackMode && isHovered.value ? 'vtk-container--stack-expanded' : '',
   ]
 }
@@ -199,11 +211,11 @@ defineSlots<{
       @mouseenter="onContainerEnter"
       @mouseleave="onContainerLeave"
     >
-      <TransitionGroup :name="`vtk-slide-${pos}`" tag="div" class="vtk-container__list">
+      <TransitionGroup :name="props.stackMode ? 'vtk-stack' : `vtk-slide-${pos}`" tag="div" class="vtk-container__list">
         <div
           v-for="(t, i) in toastsForPosition(pos)"
           :key="t.id"
-          class="vtk-toast-wrap"
+          :class="['vtk-toast-wrap', props.stackMode ? 'vtk-stack-wrap' : '']"
           :style="stackWrapStyle(i, toastsForPosition(pos).length, pos)"
         >
           <slot
@@ -240,18 +252,3 @@ defineSlots<{
   </Teleport>
 </template>
 
-<style scoped>
-.vtk-container__list {
-  display: contents;
-}
-
-/* In stack mode, list becomes a positioning context */
-.vtk-container--stack .vtk-container__list {
-  display: block;
-  position: relative;
-}
-
-.vtk-container--stack .vtk-toast-wrap {
-  display: block;
-}
-</style>

@@ -1,6 +1,6 @@
 {
   "name": "vue-toast-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ultimate toast notification system for Vue 3 and Nuxt 3",
   "license": "MIT",
   "author": "macrulezru",

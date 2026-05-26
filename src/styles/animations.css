@@ -94,6 +94,29 @@
   }
 }
 
+/* === Stack mode ===
+   .vtk-stack-wrap (1 class) base transition lives in base.css.
+   .vtk-stack-leave-active below has specificity (0,2,0) —
+   same as .vtk-container--stack .vtk-stack-wrap — but comes
+   later in CSS so it wins for the dismissal animation. */
+.vtk-stack-enter-active {
+  transition:
+    transform var(--vtk-transition-duration) var(--vtk-transition-easing),
+    opacity var(--vtk-transition-duration) var(--vtk-transition-easing);
+}
+.vtk-container--stack .vtk-stack-leave-active {
+  transition: transform 220ms ease-in, opacity 220ms ease-in;
+  pointer-events: none;
+}
+.vtk-stack-enter-from { opacity: 0; transform: scale(0.9); }
+.vtk-stack-leave-to   { opacity: 0; transform: scale(1.08); }
+
+@media (prefers-reduced-motion: reduce) {
+  .vtk-stack-enter-from, .vtk-stack-leave-to { transform: none !important; }
+  .vtk-stack-enter-active,
+  .vtk-container--stack .vtk-stack-leave-active { transition-duration: 150ms !important; }
+}
+
 /* === Spinner для loading === */
 @keyframes vtk-spin {
   to { transform: rotate(360deg); }

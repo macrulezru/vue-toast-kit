@@ -15,6 +15,7 @@ const navItems = [
   { path: '/multi',      label: 'Multi-instance', icon: '🔀' },
   { path: '/design',     label: 'Design System', icon: '🎨' },
   { path: '/animations', label: 'Animations',    icon: '✨' },
+  { path: '/stack',      label: 'Stack mode',    icon: '🗂️' },
 ]
 </script>
 
@@ -126,8 +127,8 @@ body {
   line-height: 1.5;
 }
 
-/* Ключевое: фон и цвет текста задаём здесь, а не на body,
-   чтобы CSS-переменные разрешались в контексте темы */
+/* Background and text color set here, not on body,
+   so CSS variables resolve within the theme context */
 .app {
   display: flex;
   min-height: 100vh;

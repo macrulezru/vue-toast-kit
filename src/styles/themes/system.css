@@ -1,0 +1,32 @@
+@media (prefers-color-scheme: dark) {
+  .vtk-theme-system,
+  [data-vtk-theme="system"] {
+    --vtk-color-bg: #1c1c1e;
+    --vtk-color-text: #f5f5f7;
+    --vtk-color-text-muted: #98989f;
+    --vtk-color-border: rgba(255, 255, 255, 0.10);
+    --vtk-shadow: 0 4px 20px rgba(0, 0, 0, 0.40), 0 1px 6px rgba(0, 0, 0, 0.20);
+
+    --vtk-color-success: #34d399;
+    --vtk-color-success-bg: #052e16;
+    --vtk-color-success-border: rgba(52, 211, 153, 0.20);
+
+    --vtk-color-error: #f87171;
+    --vtk-color-error-bg: #2d0a0a;
+    --vtk-color-error-border: rgba(248, 113, 113, 0.20);
+
+    --vtk-color-warning: #fbbf24;
+    --vtk-color-warning-bg: #2d1a00;
+    --vtk-color-warning-border: rgba(251, 191, 36, 0.20);
+
+    --vtk-color-info: #60a5fa;
+    --vtk-color-info-bg: #0c1a2e;
+    --vtk-color-info-border: rgba(96, 165, 250, 0.20);
+
+    --vtk-color-loading: #a78bfa;
+    --vtk-color-loading-bg: #1a0a2e;
+    --vtk-color-loading-border: rgba(167, 139, 250, 0.20);
+
+    --vtk-btn-hover-bg: rgba(255, 255, 255, 0.08);
+  }
+}

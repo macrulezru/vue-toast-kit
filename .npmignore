@@ -1,0 +1,31 @@
+# Source
+src/
+
+# Demo
+demo/
+
+# Config files
+*.config.ts
+tsconfig.json
+.eslintrc*
+.prettierrc*
+
+# Dev files
+.gitignore
+.npmignore
+ai.md
+
+# Tests
+tests/
+*.test.ts
+*.spec.ts
+vitest.config.ts
+
+# Git
+.git/
+*.md
+!README.md
+
+# IDE
+.vscode/
+.idea/

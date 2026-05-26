@@ -1,0 +1,106 @@
+/* === Enter/Leave анимации по позиции === */
+
+/* top-right */
+.vtk-slide-top-right-enter-active,
+.vtk-slide-top-right-leave-active {
+  transition:
+    transform var(--vtk-transition-duration) var(--vtk-transition-easing),
+    opacity var(--vtk-transition-duration) var(--vtk-transition-easing);
+}
+.vtk-slide-top-right-enter-from { transform: translateX(calc(100% + var(--vtk-container-offset-x))); opacity: 0; }
+.vtk-slide-top-right-leave-to   { transform: translateX(calc(100% + var(--vtk-container-offset-x))); opacity: 0; }
+
+/* top-left */
+.vtk-slide-top-left-enter-active,
+.vtk-slide-top-left-leave-active {
+  transition:
+    transform var(--vtk-transition-duration) var(--vtk-transition-easing),
+    opacity var(--vtk-transition-duration) var(--vtk-transition-easing);
+}
+.vtk-slide-top-left-enter-from { transform: translateX(calc(-100% - var(--vtk-container-offset-x))); opacity: 0; }
+.vtk-slide-top-left-leave-to   { transform: translateX(calc(-100% - var(--vtk-container-offset-x))); opacity: 0; }
+
+/* top-center */
+.vtk-slide-top-center-enter-active,
+.vtk-slide-top-center-leave-active {
+  transition:
+    transform var(--vtk-transition-duration) var(--vtk-transition-easing),
+    opacity var(--vtk-transition-duration) var(--vtk-transition-easing);
+}
+.vtk-slide-top-center-enter-from { transform: translateY(calc(-100% - var(--vtk-container-offset-y))) scale(0.85); opacity: 0; }
+.vtk-slide-top-center-leave-to   { transform: translateY(calc(-100% - var(--vtk-container-offset-y))) scale(0.85); opacity: 0; }
+
+/* bottom-right */
+.vtk-slide-bottom-right-enter-active,
+.vtk-slide-bottom-right-leave-active {
+  transition:
+    transform var(--vtk-transition-duration) var(--vtk-transition-easing),
+    opacity var(--vtk-transition-duration) var(--vtk-transition-easing);
+}
+.vtk-slide-bottom-right-enter-from { transform: translateX(calc(100% + var(--vtk-container-offset-x))); opacity: 0; }
+.vtk-slide-bottom-right-leave-to   { transform: translateX(calc(100% + var(--vtk-container-offset-x))); opacity: 0; }
+
+/* bottom-left */
+.vtk-slide-bottom-left-enter-active,
+.vtk-slide-bottom-left-leave-active {
+  transition:
+    transform var(--vtk-transition-duration) var(--vtk-transition-easing),
+    opacity var(--vtk-transition-duration) var(--vtk-transition-easing);
+}
+.vtk-slide-bottom-left-enter-from { transform: translateX(calc(-100% - var(--vtk-container-offset-x))); opacity: 0; }
+.vtk-slide-bottom-left-leave-to   { transform: translateX(calc(-100% - var(--vtk-container-offset-x))); opacity: 0; }
+
+/* bottom-center */
+.vtk-slide-bottom-center-enter-active,
+.vtk-slide-bottom-center-leave-active {
+  transition:
+    transform var(--vtk-transition-duration) var(--vtk-transition-easing),
+    opacity var(--vtk-transition-duration) var(--vtk-transition-easing);
+}
+.vtk-slide-bottom-center-enter-from { transform: translateY(calc(100% + var(--vtk-container-offset-y))) scale(0.85); opacity: 0; }
+.vtk-slide-bottom-center-leave-to   { transform: translateY(calc(100% + var(--vtk-container-offset-y))) scale(0.85); opacity: 0; }
+
+/* === prefers-reduced-motion — только fade === */
+@media (prefers-reduced-motion: reduce) {
+  .vtk-slide-top-right-enter-from,
+  .vtk-slide-top-left-enter-from,
+  .vtk-slide-top-center-enter-from,
+  .vtk-slide-bottom-right-enter-from,
+  .vtk-slide-bottom-left-enter-from,
+  .vtk-slide-bottom-center-enter-from,
+  .vtk-slide-top-right-leave-to,
+  .vtk-slide-top-left-leave-to,
+  .vtk-slide-top-center-leave-to,
+  .vtk-slide-bottom-right-leave-to,
+  .vtk-slide-bottom-left-leave-to,
+  .vtk-slide-bottom-center-leave-to {
+    transform: none !important;
+    opacity: 0;
+  }
+
+  .vtk-slide-top-right-enter-active,
+  .vtk-slide-top-left-enter-active,
+  .vtk-slide-top-center-enter-active,
+  .vtk-slide-bottom-right-enter-active,
+  .vtk-slide-bottom-left-enter-active,
+  .vtk-slide-bottom-center-enter-active,
+  .vtk-slide-top-right-leave-active,
+  .vtk-slide-top-left-leave-active,
+  .vtk-slide-top-center-leave-active,
+  .vtk-slide-bottom-right-leave-active,
+  .vtk-slide-bottom-left-leave-active,
+  .vtk-slide-bottom-center-leave-active {
+    transition-duration: 150ms !important;
+  }
+}
+
+/* === Spinner для loading === */
+@keyframes vtk-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* === Progress bar === */
+@keyframes vtk-progress {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}

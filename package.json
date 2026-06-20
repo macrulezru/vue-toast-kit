@@ -1,25 +1,28 @@
 {
   "name": "vue-toast-kit",
-  "version": "1.0.1",
-  "description": "Ultimate toast notification system for Vue 3 and Nuxt 3",
+  "version": "1.0.2",
+  "description": "Toast notifications for Vue 3 and Nuxt 3 — promise API, priority queue, undo with progress, grouping, headless mode and CSS-variable theming.",
   "license": "MIT",
-  "author": "macrulezru",
+  "author": "macrulez <macrulezru@gmail.com> (https://macrulez.ru/en)",
+  "homepage": "https://github.com/macrulezru/vue-toast-kit#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/macrulezru/vue-toast-kit"
+    "url": "git+https://github.com/macrulezru/vue-toast-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/macrulezru/vue-toast-kit/issues"
   },
   "keywords": [
     "vue",
     "vue3",
     "nuxt",
-    "nuxt3",
     "toast",
     "notification",
     "promise",
-    "undo",
     "queue",
+    "undo",
     "headless",
-    "composable"
+    "typescript"
   ],
   "type": "module",
   "main": "./dist/vue-toast-kit.cjs",
@@ -27,14 +30,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/vue-toast-kit.js",
-      "require": "./dist/vue-toast-kit.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/vue-toast-kit.cjs"
     },
     "./nuxt": {
+      "types": "./dist/nuxt/module.d.ts",
       "import": "./dist/nuxt/module.js",
-      "require": "./dist/nuxt/module.cjs",
-      "types": "./dist/nuxt/module.d.ts"
+      "require": "./dist/nuxt/module.cjs"
     },
     "./style": "./dist/style.css",
     "./style.css": "./dist/style.css"
@@ -42,11 +45,17 @@
   "sideEffects": [
     "*.css"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
+    "prepublishOnly": "npm run build",
     "dev": "vite build --watch",
     "build": "vite build && tsc --emitDeclarationOnly --declaration --outDir dist",
     "demo": "npm --prefix demo install && npm --prefix demo run dev",

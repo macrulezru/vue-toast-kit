@@ -1,10 +1,10 @@
 {
   "name": "vue-toast-kit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Toast notifications for Vue 3 and Nuxt 3 — promise API, priority queue, undo with progress, grouping, headless mode and CSS-variable theming.",
   "license": "MIT",
   "author": "macrulez <macrulezru@gmail.com> (https://macrulez.ru/en)",
-  "homepage": "https://github.com/macrulezru/vue-toast-kit#readme",
+  "homepage": "https://npm.vuecraft.ru/en/packages/vue-toast-kit/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/macrulezru/vue-toast-kit.git"

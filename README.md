@@ -1,13 +1,6 @@
-<div align="center" style="background:#111827;border-radius:20px;padding:28px 20px 20px;margin-bottom:32px">
-  <h1 style="color:#f9fafb;margin:0 0 32px;font-size:2.2em;letter-spacing:-0.03em;font-weight:700;font-family:sans-serif">
-    vue-toast-kit
-  </h1>
-  <img
-    src="https://s3.twcstorage.ru/c9a2cc89-780f97fd-311d-4a1a-b86f-c25665c9dc46/images/npm/vue-toast-kit.webp"
-    alt="vue-virtual-scroller-kit"
-    style="max-width:100%;width:auto;height:300px;border-radius:12px"
-  />
-</div>
+# **Toast Kit**
+
+![Toast Kit](https://github.com/macrulezru/assets/blob/master/packages-images/vue-toast-kit-vuecraft.png?raw=true)
 
 Promise-API with auto type switching, priority queue with preemption, undo-actions with progress timer, toast grouping, headless mode, and a full design system via CSS custom properties — all with a single peer dependency (Vue 3).
 
@@ -1128,7 +1121,7 @@ MIT
 
 macrulezru
 
-GitHub: [macrulezru](https://github.com/macrulezru) · Website: [macrulez.ru/en](https://macrulez.ru/en)
+GitHub: [macrulezru](https://github.com/macrulezru) · Website: [npm.vuecraft.ru/en/](https://npm.vuecraft.ru/en/packages/vue-toast-kit/)
 
 Bugs and questions — [issues](https://github.com/macrulezru/vue-toast-kit/issues)
 

@@ -27,15 +27,36 @@ export class ToastQueue {
 
   private persistStorage: boolean
 
+  /** Per-toast defaults sourced from GlobalToastOptions (plugin/module config), applied
+   * between DEFAULT_OPTIONS and a call's own per-toast options. */
+  private defaultToastOptions: Pick<ToastOptions, 'duration' | 'closable' | 'pauseOnHover' | 'pauseOnFocusLoss'>
+
   private addListeners = new Set<EventListener<[ToastItem]>>()
   private dismissListeners = new Set<EventListener<[string]>>()
   private updateListeners = new Set<EventListener<[string, Partial<ToastOptions>]>>()
 
-  constructor(maxVisible = 5, options: { rateLimit?: number; rateLimitWindowMs?: number; persistStorage?: boolean } = {}) {
+  constructor(
+    maxVisible = 5,
+    options: {
+      rateLimit?: number
+      rateLimitWindowMs?: number
+      persistStorage?: boolean
+      duration?: number
+      closable?: boolean
+      pauseOnHover?: boolean
+      pauseOnFocusLoss?: boolean
+    } = {},
+  ) {
     this.maxVisible = maxVisible
     this.rateLimit = options.rateLimit ?? 0
     this.rateLimitWindowMs = options.rateLimitWindowMs ?? 1000
     this.persistStorage = options.persistStorage ?? false
+    this.defaultToastOptions = {
+      duration: options.duration,
+      closable: options.closable,
+      pauseOnHover: options.pauseOnHover,
+      pauseOnFocusLoss: options.pauseOnFocusLoss,
+    }
 
     this.groupManager = new GroupManager(
       (ids) => [...this.active, ...this.pending].filter(t => ids.includes(t.id)),
@@ -291,10 +312,11 @@ export class ToastQueue {
       ...options,
       type: options.type ?? 'info',
       priority: options.priority ?? 'normal',
-      duration: options.duration ?? 4000,
-      closable: options.closable ?? true,
-      pauseOnHover: options.pauseOnHover ?? true,
-      pauseOnFocusLoss: options.pauseOnFocusLoss ?? true,
+      duration: options.duration ?? this.defaultToastOptions.duration ?? 4000,
+      closable: options.closable ?? this.defaultToastOptions.closable ?? true,
+      pauseOnHover: options.pauseOnHover ?? this.defaultToastOptions.pauseOnHover ?? true,
+      pauseOnFocusLoss:
+        options.pauseOnFocusLoss ?? this.defaultToastOptions.pauseOnFocusLoss ?? true,
       swipeToDismiss: options.swipeToDismiss ?? true,
       persist: options.persist ?? false,
     }

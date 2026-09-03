@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-09-03
+
+### Fixed
+- Nuxt module (`vue-toast-kit/nuxt`) — `addPlugin()`, `addImports()`, and `addComponent()` referenced source files that were never emitted to `dist/`, so any app using `modules: ['vue-toast-kit/nuxt']` failed at build time. Composables and `ToastContainer` auto-imports now resolve from the package's own main entry (already built); the runtime plugin is now built as its own `dist/nuxt/plugin.{js,cjs}` entry.
+- `vue-toast-kit/testing` — the subpath was missing from `package.json`'s `exports` map and had no built `.js`/`.cjs` output, so importing `createMockToast`/`mockUseToast` as documented threw `ERR_PACKAGE_PATH_NOT_EXPORTED`.
+- `GlobalToastOptions` passed to `app.use(VueToastPlugin, {...})` or a Nuxt app's `vueToastKit: {...}` config — `position`, `theme`, `duration`, `closable`, `pauseOnHover`, `pauseOnFocusLoss`, and `ignoreSSR` were accepted by the option type but never actually applied anywhere. They now flow through to `ToastContainer`'s defaults (`position`/`theme`/`maxVisible`) and to each toast's own defaults (`duration`/`closable`/`pauseOnHover`/`pauseOnFocusLoss`); `ignoreSSR: true` now actually discards server-rendered toasts instead of buffering them.
+- Removed dead code: `src/nuxt/composables.ts` (an unreachable re-export shim for a subpath that was never in `exports`), an unused `Teleport`/`TransitionGroup` import in `ToastContainer.vue`.
+
+### Added
+- `GLOBAL_OPTIONS_KEY` export — the injection key `ToastContainer` uses to read plugin/module-level defaults, for advanced consumers building a custom container.
+
 ## [1.0.0] - 2024-12-01
 
 ### Added

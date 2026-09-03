@@ -935,6 +935,9 @@ useToast() / toast (singleton)
         TransitionGroup (slide + fade per position)│
         hover → queue.pauseAll() / resumeAll()    │
         visibilitychange → pause/resume           │
+        position/theme/maxVisible default to      │
+          inject(GLOBAL_OPTIONS_KEY) when the      │
+          matching prop isn't passed explicitly    │
         slot: #toast / #toast-icon / …            │
         │                                         │
         └── Toast.vue                             │
@@ -947,8 +950,11 @@ useToast() / toast (singleton)
 
 Plugin (VueToastPlugin)                 Nuxt Module
   app.use() → installContext()            defineNuxtModule()
-  provide(TOAST_CONTEXT_KEY, ctx)         addPlugin(), addImports()
-  app.component('ToastContainer', …)      addComponent(), css inject
+  provide(TOAST_CONTEXT_KEY, ctx)         addPlugin(resolver.resolve('./plugin'))
+  provide(GLOBAL_OPTIONS_KEY, opts)         → own dist/nuxt/plugin.{js,cjs} entry
+  app.component('ToastContainer', …)      addImports()/addComponent() source from
+                                             the package's main entry (already built)
+                                           css inject
 ```
 
 ---

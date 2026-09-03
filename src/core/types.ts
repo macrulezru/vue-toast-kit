@@ -140,3 +140,7 @@ export const DEFAULT_OPTIONS: Required<Omit<ToastOptions, 'id' | 'component' | '
 }
 
 export const TOAST_CONTEXT_KEY = Symbol('vue-toast-kit-context')
+
+/** Provided by installContext() so components (ToastContainer) can read plugin/module-
+ * level defaults (position, theme, maxVisible) without them being passed explicitly. */
+export const GLOBAL_OPTIONS_KEY = Symbol('vue-toast-kit-global-options')

@@ -30,19 +30,22 @@ export default defineNuxtModule<ModuleOptions>({
     // Register Nuxt plugin
     addPlugin(resolver.resolve('./plugin'))
 
-    // Auto-imports composables
+    // Auto-imports composables — sourced from the package's own main entry
+    // (already built and exported there) rather than deep src/dist paths, which
+    // the lib build never mirrors 1:1 and would otherwise leave unresolved.
     addImports([
-      { name: 'useToast', from: resolver.resolve('../composables/useToast') },
-      { name: 'useToastState', from: resolver.resolve('../composables/useToastState') },
-      { name: 'createToastContext', from: resolver.resolve('../composables/useToastContext') },
-      { name: 'toast', from: resolver.resolve('../composables/useToast') },
+      { name: 'useToast', from: 'vue-toast-kit' },
+      { name: 'useToastState', from: 'vue-toast-kit' },
+      { name: 'createToastContext', from: 'vue-toast-kit' },
+      { name: 'toast', from: 'vue-toast-kit' },
     ])
 
-    // Auto-import components
+    // Auto-import components — same reasoning as addImports above.
     if (options.registerComponent !== false) {
       addComponent({
         name: 'ToastContainer',
-        filePath: resolver.resolve('../components/ToastContainer.vue'),
+        export: 'ToastContainer',
+        filePath: 'vue-toast-kit',
       })
     }
 

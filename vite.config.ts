@@ -18,13 +18,18 @@ export default defineConfig({
       entry: {
         'vue-toast-kit': resolve(__dirname, 'src/index.ts'),
         'nuxt/module': resolve(__dirname, 'src/nuxt/module.ts'),
+        'nuxt/plugin': resolve(__dirname, 'src/nuxt/plugin.ts'),
+        testing: resolve(__dirname, 'src/testing.ts'),
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) =>
         format === 'es' ? `${entryName}.js` : `${entryName}.cjs`,
     },
     rollupOptions: {
-      external: ['vue', 'nuxt', '@nuxt/kit', 'pathe'],
+      // '#app' is a Nuxt-only virtual alias with no real module to resolve outside a
+      // Nuxt app build — only src/nuxt/plugin.ts imports it, left unresolved here so
+      // Nuxt's own bundler resolves it when it later processes dist/nuxt/plugin.js.
+      external: ['vue', 'nuxt', '@nuxt/kit', 'pathe', '#app'],
       output: {
         globals: { vue: 'Vue' },
         assetFileNames: 'style.css',

@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import { Teleport, TransitionGroup } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import Toast from './Toast.vue'
 import { useToastContext } from '../composables/useToastContext'
 import { globalBuffer } from '../core/ToastBuffer'
-import { PRIORITY_ORDER } from '../core/types'
-import type { ToastContext, ToastPosition, ToastDesignTokens, ToastItem } from '../core/types'
+import { GLOBAL_OPTIONS_KEY, PRIORITY_ORDER } from '../core/types'
+import type {
+  ToastContext,
+  ToastPosition,
+  ToastDesignTokens,
+  ToastItem,
+  GlobalToastOptions,
+} from '../core/types'
 
 const ALL_POSITIONS: ToastPosition[] = [
   'top-left', 'top-center', 'top-right',
@@ -25,8 +30,6 @@ const props = withDefaults(defineProps<{
   theme?: 'light' | 'dark' | 'system' | ToastDesignTokens
   stackMode?: boolean
 }>(), {
-  position: 'bottom-right',
-  maxVisible: 5,
   gap: 8,
   offsetX: 16,
   offsetY: 16,
@@ -40,8 +43,16 @@ const props = withDefaults(defineProps<{
 const ctx = props.context ?? useToastContext()
 const queue = ctx.queue
 
+// Global defaults from the plugin/module's install options (app.provide'd by
+// installContext) — only used when the corresponding prop isn't set explicitly,
+// so `<ToastContainer />` with no props honors `app.use(VueToastPlugin, {...})`.
+const globalOptions = inject<GlobalToastOptions>(GLOBAL_OPTIONS_KEY, {})
+const position = computed(() => props.position ?? globalOptions.position ?? 'bottom-right')
+const maxVisible = computed(() => props.maxVisible ?? globalOptions.maxVisible ?? 5)
+const theme = computed(() => props.theme ?? globalOptions.theme)
+
 // Sync maxVisible with the queue
-watch(() => props.maxVisible, (n) => queue.setMaxVisible(n), { immediate: true })
+watch(maxVisible, (n) => queue.setMaxVisible(n), { immediate: true })
 
 const isHovered = ref(false)
 
@@ -53,7 +64,7 @@ const allToasts = computed(() => queue.active.filter(t => !queue.isHidden(t.id))
 // ломает последовательность стопки, поэтому отключена.
 function toastsForPosition(pos: ToastPosition): ToastItem[] {
   const filtered = allToasts.value
-    .filter(t => (t.options.position ?? props.position) === pos)
+    .filter(t => (t.options.position ?? position.value) === pos)
   if (props.stackMode) return filtered
   return filtered.sort((a, b) => PRIORITY_ORDER[b.options.priority] - PRIORITY_ORDER[a.options.priority])
 }
@@ -103,7 +114,7 @@ function containerClass(pos: ToastPosition) {
   return [
     'vtk-container',
     `vtk-container--${pos}`,
-    props.theme && typeof props.theme === 'string' ? `vtk-theme-${props.theme}` : '',
+    theme.value && typeof theme.value === 'string' ? `vtk-theme-${theme.value}` : '',
     props.stackMode ? 'vtk-container--stack' : '',
     props.stackMode && isHovered.value ? 'vtk-container--stack-expanded' : '',
   ]
@@ -118,7 +129,7 @@ const containerStyle = computed(() => {
     '--vtk-container-offset-y': `${props.offsetY}px`,
   }
 
-  if (props.theme && typeof props.theme === 'object') {
+  if (theme.value && typeof theme.value === 'object') {
     const map: Record<keyof ToastDesignTokens, string> = {
       colorBg: '--vtk-color-bg',
       colorText: '--vtk-color-text',
@@ -146,7 +157,7 @@ const containerStyle = computed(() => {
       zIndex: '--vtk-z-index',
     }
     for (const [key, cssVar] of Object.entries(map)) {
-      const val = (props.theme as ToastDesignTokens)[key as keyof ToastDesignTokens]
+      const val = (theme.value as ToastDesignTokens)[key as keyof ToastDesignTokens]
       if (val) style[cssVar] = val
     }
   }

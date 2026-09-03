@@ -146,8 +146,8 @@ function onKeydown(e: KeyboardEvent) {
   >
     <!-- Rich content: full replacement via component -->
     <component
-      v-if="toast.options.component"
       :is="toast.options.component"
+      v-if="toast.options.component"
       v-bind="toast.options.componentProps"
       :toast="toast"
       :dismiss="() => onDismiss(toast.id)"

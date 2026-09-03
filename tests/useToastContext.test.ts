@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { createToastContext } from '../src/composables/useToastContext'
 
 describe('createToastContext', () => {
@@ -75,5 +75,72 @@ describe('createToastContext', () => {
     expect(id2).toMatch(/^vtk-/)
     expect(id3).toBe('')
     expect(ctx.queue.active).toHaveLength(2)
+  })
+
+  // Regression: these GlobalToastOptions fields used to be accepted by the type but
+  // silently ignored — createToastContext()/getOrCreateGlobalContext() now thread them
+  // into the underlying ToastQueue's per-toast defaults.
+  describe('global per-toast defaults (regression: were previously dead options)', () => {
+    it('applies a custom default duration to toasts that do not set their own', () => {
+      const ctx = createToastContext({ duration: 9000 })
+      const id = ctx.addToast('Test', {})
+      const item = ctx.queue.active.find(t => t.id === id)!
+      expect(item.options.duration).toBe(9000)
+    })
+
+    it('a per-toast duration still overrides the global default', () => {
+      const ctx = createToastContext({ duration: 9000 })
+      const id = ctx.addToast('Test', { duration: 1000 })
+      const item = ctx.queue.active.find(t => t.id === id)!
+      expect(item.options.duration).toBe(1000)
+    })
+
+    it('applies default closable/pauseOnHover/pauseOnFocusLoss', () => {
+      const ctx = createToastContext({
+        closable: false,
+        pauseOnHover: false,
+        pauseOnFocusLoss: false,
+      })
+      const id = ctx.addToast('Test', {})
+      const item = ctx.queue.active.find(t => t.id === id)!
+      expect(item.options.closable).toBe(false)
+      expect(item.options.pauseOnHover).toBe(false)
+      expect(item.options.pauseOnFocusLoss).toBe(false)
+    })
+  })
+})
+
+describe('installContext SSR handling', () => {
+  const originalWindow = globalThis.window
+
+  beforeEach(() => {
+    vi.resetModules()
+  })
+
+  afterEach(() => {
+    vi.stubGlobal('window', originalWindow)
+    vi.resetModules()
+  })
+
+  it('ignoreSSR:true discards server-side toasts instead of buffering them', async () => {
+    vi.stubGlobal('window', undefined)
+    const { createToastContext: createCtxServer } = await import('../src/composables/useToastContext')
+    const { globalBuffer } = await import('../src/core/ToastBuffer')
+
+    const ctx = createCtxServer({ ignoreSSR: true })
+    ctx.addToast('Server toast', {})
+
+    expect(globalBuffer.size).toBe(0)
+  })
+
+  it('without ignoreSSR, server-side toasts are still buffered (existing behavior)', async () => {
+    vi.stubGlobal('window', undefined)
+    const { createToastContext: createCtxServer } = await import('../src/composables/useToastContext')
+    const { globalBuffer } = await import('../src/core/ToastBuffer')
+
+    const ctx = createCtxServer({})
+    ctx.addToast('Server toast', {})
+
+    expect(globalBuffer.size).toBe(1)
   })
 })

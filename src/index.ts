@@ -21,7 +21,7 @@ export type {
   ToastDesignTokens,
 } from './core/types'
 
-export { TOAST_CONTEXT_KEY, PRIORITY_ORDER, DEFAULT_OPTIONS } from './core/types'
+export { TOAST_CONTEXT_KEY, GLOBAL_OPTIONS_KEY, PRIORITY_ORDER, DEFAULT_OPTIONS } from './core/types'
 
 // Core classes (for advanced use)
 export { ToastQueue } from './core/ToastQueue'

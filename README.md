@@ -1,6 +1,6 @@
 # **Toast Kit**
 
-![Toast Kit](https://github.com/macrulezru/assets/blob/master/packages-images/vue-toast-kit.png?raw=true)
+![Toast Kit](https://github.com/macrulezru/assets/blob/master/packages-images/vue-toast-kit-vuecraft.png?raw=true)
 
 Promise-API with auto type switching, priority queue with preemption, undo-actions with progress timer, toast grouping, headless mode, and a full design system via CSS custom properties — all with a single peer dependency (Vue 3).
 

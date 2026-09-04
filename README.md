@@ -100,6 +100,68 @@ export default defineNuxtConfig({
 </template>
 ```
 
+### More examples
+
+#### One call, three toast states
+
+`toast.promise` flips the toast from loading to success or error based on the promise's outcome, and returns that same promise so `await` keeps working as usual.
+
+```ts
+import { toast } from 'vue-toast-kit'
+
+await toast.promise(fetch('/api/deploy').then((r) => r.json()), {
+  loading: 'Deploying…',
+  success: 'Deployed successfully!',
+  error: 'Deployment failed',
+})
+
+// One call, three states — the toast flips from loading to success/error
+// on its own, and the original promise is still returned so you can await it.
+```
+
+#### Deletion with a real window to undo, not instant
+
+`toast.undo` shows a countdown progress bar — the actual delete (`permanentlyDelete`) only happens once time runs out and the user hasn't clicked Restore.
+
+```ts
+import { toast } from 'vue-toast-kit'
+
+function deleteFile(id: string) {
+  markForDeletion(id)
+
+  toast.undo(`File "${fileName}" deleted`, {
+    undo: {
+      label: 'Restore',
+      duration: 6000,
+      onUndo: () => {
+        restoreFile(id)
+        toast.success('File restored')
+      },
+    },
+    onAutoClose: () => permanentlyDelete(id),
+  })
+}
+
+// A countdown progress bar gives the user a real window to change their
+// mind — the delete only actually happens once the timer runs out unanswered.
+```
+
+#### Similar toasts collapse into one
+
+Toasts sharing a `groupKey` collapse into a single one with a "+N" counter — dismiss the leader and the next one takes its place automatically, so the screen doesn't fill up with near-identical notifications.
+
+```ts
+import { toast } from 'vue-toast-kit'
+
+// All three calls produce one visible toast, with a "+2" counter
+toast.info('New message from Alice', { groupKey: 'messages' })
+toast.info('New message from Bob', { groupKey: 'messages' })
+toast.info('New message from Carol', { groupKey: 'messages' })
+
+// The leader (first in the group) stays visible; when it's dismissed, the
+// next toast in the group takes over automatically.
+```
+
 ---
 
 ## Documentation & links

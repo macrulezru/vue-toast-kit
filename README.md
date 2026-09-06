@@ -26,6 +26,17 @@ Promise-API with auto type switching, priority queue with preemption, undo-actio
 
 ---
 
+## When you'd reach for this
+
+Showing the result of an action without interrupting the user with a modal alert() or hiding it in a console they'll never open — that's where vue-toast-kit starts.
+
+- **An action's outcome isn't known upfront** — A server request can hang, succeed, or fail — instead of manually showing a different notification in every branch of the code, the same notification switches on its own between "loading," "done," and "error."
+- **Deleting something should be reversible** — One stray click on "Delete" and the data is gone for good. The notification itself gives you a few seconds to undo, before the action is confirmed for real.
+- **The same event fires dozens of times in a row** — Syncing ten files shouldn't mean ten popping cards in a row — one notification with a counter that expands on click covers it instead.
+- **Toasts should look like your product, not a library** — The look adapts to any brand without writing a single extra line of styling, and when you need full control, you can drop the visuals entirely and keep just the underlying logic for your own design.
+
+---
+
 ## Installation
 
 Requires Vue `3.3+`. Nuxt `3+` is only needed if you use `vue-toast-kit/nuxt`. No other runtime dependencies.

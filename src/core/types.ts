@@ -98,6 +98,8 @@ export interface PromiseToastMessages<T = unknown> {
 
 export interface ToastContext {
   queue: import('./ToastQueue').ToastQueue
+  /** Buffers toasts added during SSR until a mounted ToastContainer flushes them. */
+  buffer: import('./ToastBuffer').ToastBuffer
   addToast(message: string | VNode, options?: ToastOptions): string
   dismiss(id?: string): void
   update(id: string, options: Partial<ToastOptions>): void

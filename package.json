@@ -1,6 +1,6 @@
 {
   "name": "vue-toast-kit",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "Toast notifications for Vue 3 and Nuxt 3 — promise API, priority queue, undo with progress, grouping, headless mode and CSS-variable theming.",
   "license": "MIT",
   "author": "macrulez <macrulezru@gmail.com> (https://macrulez.ru/en)",
@@ -62,7 +62,7 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "dev": "vite build --watch",
-    "build": "vite build && tsc --emitDeclarationOnly --declaration --outDir dist",
+    "build": "vite build && tsc --project tsconfig.nuxt.json && node -e \"const fs=require('fs');fs.copyFileSync('dist/.nuxt-dts/nuxt/module.d.ts','dist/nuxt/module.d.ts');fs.copyFileSync('dist/.nuxt-dts/nuxt/plugin.d.ts','dist/nuxt/plugin.d.ts');fs.rmSync('dist/.nuxt-dts',{recursive:true,force:true})\"",
     "demo": "npm --prefix demo install && npm --prefix demo run dev",
     "demo:dev": "npm --prefix demo run dev",
     "demo:build": "npm --prefix demo run build",

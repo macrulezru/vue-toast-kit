@@ -2,7 +2,6 @@
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import Toast from './Toast.vue'
 import { useToastContext } from '../composables/useToastContext'
-import { globalBuffer } from '../core/ToastBuffer'
 import { GLOBAL_OPTIONS_KEY, PRIORITY_ORDER } from '../core/types'
 import type {
   ToastContext,
@@ -183,15 +182,16 @@ function onContainerLeave() {
   queue.resumeAll()
 }
 
-// SSR buffer flush on mount
+// SSR buffer flush on mount — uses this container's own context's buffer
+// (isolated per app instance / SSR request), not a shared global one.
 onMounted(() => {
   setTimeout(() => {
-    globalBuffer.onFlush((items) => {
+    ctx.buffer.onFlush((items) => {
       for (const item of items) {
         ctx.addToast(item.message, item.options)
       }
     })
-    globalBuffer.flush()
+    ctx.buffer.flush()
   }, 100)
 })
 

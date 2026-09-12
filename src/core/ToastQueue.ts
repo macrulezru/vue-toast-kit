@@ -232,6 +232,19 @@ export class ToastQueue {
     const item = [...this.active, ...this.pending].find(t => t.id === id)
     if (!item) return
     this.mergeOptions(item, partial)
+    // A duration change only takes effect on a running countdown if the
+    // timer is restarted — the already-scheduled UndoTimer keeps counting
+    // down on its original duration otherwise, so the toast could
+    // auto-dismiss before the "new" duration would suggest. Only restart
+    // when duration itself (or undo.duration) is actually part of this
+    // update, and only if there's a running timer to restart (a pending —
+    // not yet active — item has none yet).
+    const durationChanged =
+      'duration' in partial || (partial.undo !== undefined && 'duration' in partial.undo)
+    if (durationChanged && this.timers.has(id)) {
+      this.stopTimer(id)
+      this.startTimer(item)
+    }
     this.emit(this.updateListeners, id, partial)
   }
 

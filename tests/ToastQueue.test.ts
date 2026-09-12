@@ -139,6 +139,44 @@ describe('ToastQueue', () => {
     expect(queue.active.find(t => t.id === id)?.options.type).toBe('error')
   })
 
+  it('update() restarts the auto-dismiss timer when duration changes, using the new duration', () => {
+    vi.useFakeTimers()
+    try {
+      const id = queue.add('Hello', { duration: 1000 })
+      vi.advanceTimersByTime(800)
+      expect(queue.isActive(id)).toBe(true)
+
+      queue.update(id, { duration: 5000 })
+
+      // Past the ORIGINAL 1000ms deadline (800 + 800 = 1600ms elapsed since
+      // add()) — without a restart this would have already auto-dismissed.
+      vi.advanceTimersByTime(800)
+      expect(queue.isActive(id)).toBe(true)
+
+      // Now past the NEW 5000ms deadline, counted from the restart.
+      vi.advanceTimersByTime(4300)
+      expect(queue.isActive(id)).toBe(false)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('update() without a duration change does not reset the running countdown', () => {
+    vi.useFakeTimers()
+    try {
+      const id = queue.add('Hello', { duration: 1000 })
+      vi.advanceTimersByTime(800)
+
+      queue.update(id, { type: 'error' })
+
+      // Original deadline still applies — unrelated update did not restart it.
+      vi.advanceTimersByTime(200)
+      expect(queue.isActive(id)).toBe(false)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   // ── isActive ──────────────────────────────────────────────────────────────
 
   it('isActive returns true for active toasts', () => {

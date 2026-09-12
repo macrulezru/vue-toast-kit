@@ -86,3 +86,38 @@ describe('ToastContainer global option defaults', () => {
     wrapper.unmount()
   })
 })
+
+// Regression: `expand` was declared as a prop (default false) but never read
+// anywhere — only real mouse hover (`isHovered`) drove stack expansion, so
+// `<ToastContainer stack-mode expand />` had no visible effect at all.
+describe('ToastContainer stackMode expand prop', () => {
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  it('keeps the stack permanently expanded when expand is set, without hovering', () => {
+    const ctx = createToastContext()
+    ctx.addToast('A', {})
+    ctx.addToast('B', {})
+    const wrapper = mount(ToastContainer, {
+      props: { context: ctx, stackMode: true, expand: true },
+      attachTo: document.body,
+    })
+
+    expect(document.querySelector('.vtk-container--stack-expanded')).toBeTruthy()
+    wrapper.unmount()
+  })
+
+  it('does not expand the stack when expand is unset and there is no hover', () => {
+    const ctx = createToastContext()
+    ctx.addToast('A', {})
+    ctx.addToast('B', {})
+    const wrapper = mount(ToastContainer, {
+      props: { context: ctx, stackMode: true },
+      attachTo: document.body,
+    })
+
+    expect(document.querySelector('.vtk-container--stack-expanded')).toBeFalsy()
+    wrapper.unmount()
+  })
+})

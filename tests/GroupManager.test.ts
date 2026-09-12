@@ -53,6 +53,17 @@ describe('GroupManager', () => {
     expect(hidden.has('b')).toBe(true)
   })
 
+  it('sets the leader\'s isGrouped once a second item joins the group', () => {
+    const { manager, items } = setup()
+    const a = makeItem('a')
+    const b = makeItem('b')
+    items.push(a, b)
+    manager.add('a', 'grp')
+    expect(a.isGrouped.value).toBe(false)
+    manager.add('b', 'grp')
+    expect(a.isGrouped.value).toBe(true)
+  })
+
   it('removing leader promotes next item', () => {
     const { manager, items, hidden } = setup()
     const a = makeItem('a')
@@ -63,6 +74,18 @@ describe('GroupManager', () => {
     manager.remove('a', 'grp')
     expect(hidden.has('b')).toBe(false)
     expect(b.groupCount.value).toBe(1)
+  })
+
+  it('clears isGrouped on the new leader once the group shrinks back to one item', () => {
+    const { manager, items } = setup()
+    const a = makeItem('a')
+    const b = makeItem('b')
+    items.push(a, b)
+    manager.add('a', 'grp')
+    manager.add('b', 'grp')
+    expect(a.isGrouped.value).toBe(true)
+    manager.remove('a', 'grp')
+    expect(b.isGrouped.value).toBe(false)
   })
 
   it('toggleExpand shows all items', () => {

@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-09-12
+
+### Fixed
+- Published TypeScript types were broken for the main entry (all 5 Vue components — `ToastContainer`, `Toast`, `ToastIcon`, `ToastProgressBar`, `ToastActions` — silently degraded to untyped `any` props) and for the `vue-toast-kit/nuxt` subpath (blank/failing types).
+- `installContext()` was silently sharing one `ToastQueue`/SSR buffer singleton across every `app.use(VueToastPlugin, ...)` call — a real cross-request/cross-instance leak risk (e.g. under SSR, or multiple Vue apps on the same page). Each install now gets its own isolated context.
+
+## [1.0.7] - 2026-09-06
+
+### Docs
+- Added a "When you'd reach for this" section to the README.
+
+## [1.0.6] - 2026-09-05
+
+### Docs
+- Added more usage examples to the README, pulled from the site's live code demos.
+
+## [1.0.5] - 2026-09-04
+
+### Docs
+- Rewrote the README as a slim overview that links out to the full docs site, instead of duplicating it.
+
 ## [1.0.4] - 2026-09-03
 
 ### Fixed

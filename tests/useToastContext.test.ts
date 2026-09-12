@@ -125,22 +125,61 @@ describe('installContext SSR handling', () => {
   it('ignoreSSR:true discards server-side toasts instead of buffering them', async () => {
     vi.stubGlobal('window', undefined)
     const { createToastContext: createCtxServer } = await import('../src/composables/useToastContext')
-    const { globalBuffer } = await import('../src/core/ToastBuffer')
 
     const ctx = createCtxServer({ ignoreSSR: true })
     ctx.addToast('Server toast', {})
 
-    expect(globalBuffer.size).toBe(0)
+    expect(ctx.buffer.size).toBe(0)
   })
 
   it('without ignoreSSR, server-side toasts are still buffered (existing behavior)', async () => {
     vi.stubGlobal('window', undefined)
     const { createToastContext: createCtxServer } = await import('../src/composables/useToastContext')
-    const { globalBuffer } = await import('../src/core/ToastBuffer')
 
     const ctx = createCtxServer({})
     ctx.addToast('Server toast', {})
 
-    expect(globalBuffer.size).toBe(1)
+    expect(ctx.buffer.size).toBe(1)
+  })
+
+  it('createToastContext() gives every call its own isolated queue and buffer', async () => {
+    vi.stubGlobal('window', undefined)
+    const { createToastContext: createCtxServer } = await import('../src/composables/useToastContext')
+
+    const ctxA = createCtxServer({})
+    const ctxB = createCtxServer({})
+
+    expect(ctxA).not.toBe(ctxB)
+    expect(ctxA.queue).not.toBe(ctxB.queue)
+    expect(ctxA.buffer).not.toBe(ctxB.buffer)
+
+    ctxA.addToast('A-only', {})
+    expect(ctxA.buffer.size).toBe(1)
+    expect(ctxB.buffer.size).toBe(0)
+  })
+})
+
+describe('installContext isolation', () => {
+  it('two separate app.use(VueToastPlugin, {...}) installs never share a queue', async () => {
+    const { createApp } = await import('vue')
+    const { VueToastPlugin } = await import('../src/plugin')
+    const { useToastContext } = await import('../src/composables/useToastContext')
+
+    const app1 = createApp({ template: '<div/>' })
+    app1.use(VueToastPlugin, { maxVisible: 2 })
+    let ctx1: ReturnType<typeof useToastContext> | undefined
+    app1.runWithContext(() => { ctx1 = useToastContext() })
+
+    const app2 = createApp({ template: '<div/>' })
+    app2.use(VueToastPlugin, { maxVisible: 99 })
+    let ctx2: ReturnType<typeof useToastContext> | undefined
+    app2.runWithContext(() => { ctx2 = useToastContext() })
+
+    expect(ctx1).not.toBe(ctx2)
+    expect(ctx1!.queue).not.toBe(ctx2!.queue)
+
+    ctx2!.addToast('app2-only', { id: 'app2-toast' })
+    expect(ctx1!.queue.active.some(t => t.id === 'app2-toast')).toBe(false)
+    expect(ctx2!.queue.active.some(t => t.id === 'app2-toast')).toBe(true)
   })
 })

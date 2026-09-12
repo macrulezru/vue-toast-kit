@@ -23,6 +23,8 @@ const props = withDefaults(defineProps<{
   offsetX?: number
   offsetY?: number
   zIndex?: number
+  /** Stack mode only: keep the stack permanently expanded (as if always hovered),
+   *  instead of only expanding on hover. No effect without `stackMode`. */
   expand?: boolean
   teleportTo?: string
   context?: ToastContext
@@ -80,7 +82,7 @@ function stackDepth(index: number): number {
 // no layout jump from toggling between absolute and relative positioning.
 // The CSS transition on .vtk-stack-wrap handles the smooth animation.
 function stackWrapStyle(index: number, _total: number, pos: ToastPosition): Record<string, string> {
-  if (!props.stackMode || isHovered.value) return {}
+  if (!props.stackMode || props.expand || isHovered.value) return {}
   const depth = stackDepth(index)
 
   const isBottom = pos.startsWith('bottom')
@@ -115,7 +117,7 @@ function containerClass(pos: ToastPosition) {
     `vtk-container--${pos}`,
     theme.value && typeof theme.value === 'string' ? `vtk-theme-${theme.value}` : '',
     props.stackMode ? 'vtk-container--stack' : '',
-    props.stackMode && isHovered.value ? 'vtk-container--stack-expanded' : '',
+    props.stackMode && (props.expand || isHovered.value) ? 'vtk-container--stack-expanded' : '',
   ]
 }
 

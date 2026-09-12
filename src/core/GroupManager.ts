@@ -31,6 +31,7 @@ export class GroupManager {
     const leader = this.getItems([leaderId])[0]
     if (leader) {
       leader.groupCount.value = ids.length
+      leader.isGrouped.value = ids.length > 1
     }
 
     if (!this.expandedGroups.has(groupKey)) {
@@ -57,6 +58,7 @@ export class GroupManager {
     const leader = this.getItems([leaderId])[0]
     if (leader) {
       leader.groupCount.value = ids.length
+      leader.isGrouped.value = ids.length > 1
     }
 
     if (idx === 0 && ids.length > 0) {
